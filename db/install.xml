@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/siteconfigdiff/db" VERSION="2026101400" COMMENT="Site configuration snapshot, compare, and change audit storage" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+<XMLDB PATH="local/siteconfigdiff/db" VERSION="20261014" COMMENT="Site configuration snapshot, compare, and change audit storage" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
-    <TABLE NAME="local_scd_snapshot" COMMENT="Sanitized configuration snapshots">
+    <TABLE NAME="local_siteconfigdiff_snap" COMMENT="Sanitized configuration snapshots">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
@@ -14,7 +14,7 @@
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
       <INDEXES><INDEX NAME="origin" UNIQUE="false" FIELDS="origin"/><INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated"/></INDEXES>
     </TABLE>
-    <TABLE NAME="local_scd_compare" COMMENT="Deterministic comparison results">
+    <TABLE NAME="local_siteconfigdiff_diff" COMMENT="Deterministic comparison results">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="leftid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -26,7 +26,7 @@
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
       <INDEXES><INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated"/></INDEXES>
     </TABLE>
-    <TABLE NAME="local_scd_plan" COMMENT="Selected previewed plan, immutable after creation">
+    <TABLE NAME="local_siteconfigdiff_plan" COMMENT="Selected previewed plan, immutable after creation">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="comparisonid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -39,7 +39,7 @@
       <KEYS><KEY NAME="primary" TYPE="primary" FIELDS="id"/></KEYS>
       <INDEXES><INDEX NAME="status" UNIQUE="false" FIELDS="status"/></INDEXES>
     </TABLE>
-    <TABLE NAME="local_scd_log" COMMENT="Changes and explicit rejection audit">
+    <TABLE NAME="local_siteconfigdiff_log" COMMENT="Changes and explicit rejection audit">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="planid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

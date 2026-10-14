@@ -1,4 +1,4 @@
-@local_siteconfigdiff @javascript
+@local @local_siteconfigdiff @javascript
 Feature: Preview configuration differences before any application
   As a Moodle administrator
   I can compare sanitized configuration snapshots without automatically writing settings.

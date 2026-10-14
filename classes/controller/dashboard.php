@@ -161,22 +161,22 @@ final class dashboard {
                         throw new \InvalidArgumentException('Plan is no longer pending.');
                     }
                     $plan = json_decode($record->document, true, 32, JSON_THROW_ON_ERROR);
-                    $DB->set_field('local_scd_plan', 'status', 'running', ['id' => $planid]);
+                    $DB->set_field('local_siteconfigdiff_plan', 'status', 'running', ['id' => $planid]);
                     $summary = (new applier())->apply($plan,
                         function($component, $key, $outcome, $reason, $before, $after) use ($planid) {
                             $this->repo->log($planid, $component, $key, $outcome, $reason, $before, $after);
                         });
                     $allapplied = $summary['applied'] === count($plan['entries']);
                     $status = $allapplied ? 'completed' : ($summary['applied'] > 0 ? 'partial' : 'failed');
-                    $DB->set_field('local_scd_plan', 'status', $status, ['id' => $planid]);
+                    $DB->set_field('local_siteconfigdiff_plan', 'status', $status, ['id' => $planid]);
                     if ($summary['applied'] > 0) {
-                        $DB->set_field('local_scd_plan', 'timeapplied', time(), ['id' => $planid]);
+                        $DB->set_field('local_siteconfigdiff_plan', 'timeapplied', time(), ['id' => $planid]);
                     }
                     $this->emit('plan_applied', $planid);
                     return ['view' => 'plan', 'id' => $planid];
                 } catch (\Throwable $e) {
                     if (isset($record) && $record->status === 'pending') {
-                        $DB->set_field('local_scd_plan', 'status', 'failed', ['id' => $planid]);
+                        $DB->set_field('local_siteconfigdiff_plan', 'status', 'failed', ['id' => $planid]);
                     }
                     throw $e;
                 } finally {

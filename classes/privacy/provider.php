@@ -31,7 +31,7 @@ use core_privacy\local\request\writer;
 
 /** Personal identifiers are in audit ownership columns only, not in snapshots. */
 final class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\plugin\provider {
-    private const TABLES = ['local_scd_snapshot', 'local_scd_compare', 'local_scd_plan', 'local_scd_log'];
+    private const TABLES = ['local_siteconfigdiff_snap', 'local_siteconfigdiff_diff', 'local_siteconfigdiff_plan', 'local_siteconfigdiff_log'];
 
     public static function get_metadata(collection $collection): collection {
         foreach (self::TABLES as $table) {
