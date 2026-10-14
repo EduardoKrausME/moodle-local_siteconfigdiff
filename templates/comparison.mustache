@@ -1,0 +1,65 @@
+<div class="local-siteconfigdiff container-fluid">
+    <p><a href="{{actionurl}}">{{#str}}back, local_siteconfigdiff{{/str}}</a></p>
+    <h2>{{#str}}comparison, local_siteconfigdiff{{/str}} #{{id}}</h2>
+    <p>{{#str}}source, local_siteconfigdiff{{/str}}: {{source_moodle}}
+        | {{#str}}destination, local_siteconfigdiff{{/str}}: {{target_moodle}}</p>
+    <p>{{#str}}comparisonnotice, local_siteconfigdiff{{/str}}</p>
+    {{#haspluginchanges}}
+    <h3>{{#str}}pluginchanges, local_siteconfigdiff{{/str}}</h3>
+    <table class="generaltable table table-striped">
+        <thead><tr><th>{{#str}}component, local_siteconfigdiff{{/str}}</th><th>{{#str}}status, local_siteconfigdiff{{/str}}</th>
+            <th>{{#str}}sourceversion, local_siteconfigdiff{{/str}}</th><th>{{#str}}targetversion, local_siteconfigdiff{{/str}}</th></tr></thead>
+        <tbody>{{#pluginchanges}}<tr><td>{{component}}</td><td>{{status}}</td><td>{{source_version}}</td><td>{{target_version}}</td></tr>{{/pluginchanges}}</tbody>
+    </table>
+    {{/haspluginchanges}}
+    <form method="get" action="{{actionurl}}" class="form-inline mb-3">
+        <input type="hidden" name="view" value="compare"><input type="hidden" name="id" value="{{id}}">
+        <label for="scd-search">{{#str}}search, local_siteconfigdiff{{/str}}</label>
+        <input id="scd-search" class="form-control mr-2" name="q" type="search" value="{{q}}">
+        <label for="scd-status">{{#str}}status, local_siteconfigdiff{{/str}}</label>
+        <select id="scd-status" name="status" class="custom-select mr-2">
+            <option value="">{{#str}}all, local_siteconfigdiff{{/str}}</option>
+            {{#statefilters}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/statefilters}}
+        </select>
+        <label for="scd-component">{{#str}}component, local_siteconfigdiff{{/str}}</label>
+        <select id="scd-component" class="custom-select mr-2" name="component">
+            <option value="">{{#str}}all, local_siteconfigdiff{{/str}}</option>
+            {{#componentfilters}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{value}}</option>{{/componentfilters}}
+        </select>
+        <label for="scd-group">{{#str}}group, local_siteconfigdiff{{/str}}</label>
+        <select id="scd-group" class="custom-select mr-2" name="group">
+            <option value="">{{#str}}all, local_siteconfigdiff{{/str}}</option>
+            {{#groupfilters}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{value}}</option>{{/groupfilters}}
+        </select>
+        <label for="scd-risk">{{#str}}risk, local_siteconfigdiff{{/str}}</label>
+        <select id="scd-risk" class="custom-select mr-2" name="risk">
+            <option value="">{{#str}}all, local_siteconfigdiff{{/str}}</option>
+            {{#riskfilters}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/riskfilters}}
+        </select>
+        <button type="submit" class="btn btn-secondary">{{#str}}filter, local_siteconfigdiff{{/str}}</button>
+    </form>
+    <form method="post" action="{{actionurl}}">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        <input type="hidden" name="action" value="plan">
+        <input type="hidden" name="comparisonid" value="{{id}}">
+        <div class="table-responsive">
+            <table class="generaltable table table-striped">
+                <thead><tr><th>{{#str}}select, local_siteconfigdiff{{/str}}</th>
+                    <th>{{#str}}component, local_siteconfigdiff{{/str}}</th><th>{{#str}}setting, local_siteconfigdiff{{/str}}</th>
+                    <th>{{#str}}status, local_siteconfigdiff{{/str}}</th><th>{{#str}}risk, local_siteconfigdiff{{/str}}</th>
+                    <th>{{#str}}impact, local_siteconfigdiff{{/str}}</th><th>{{#str}}pluginversions, local_siteconfigdiff{{/str}}</th><th>{{#str}}oldvalue, local_siteconfigdiff{{/str}}</th>
+                    <th>{{#str}}newvalue, local_siteconfigdiff{{/str}}</th></tr></thead>
+                <tbody>{{#rows}}<tr>
+                    <td>{{#applicable}}<input id="scd-row-{{id}}" type="checkbox" name="rows[]" value="{{id}}"><label for="scd-row-{{id}}">{{component}}:{{name}}</label>{{/applicable}}</td>
+                    <td>{{component}}{{#missingplugin}} ({{#str}}missingplugin, local_siteconfigdiff{{/str}}){{/missingplugin}}</td>
+                    <td>{{name}}</td><td>{{status}}</td><td>{{risk}}</td><td>{{impact}}</td>
+                    <td>{{source_version}} / {{target_version}}</td>
+                    <td><code>{{oldvalue}}</code></td><td><code>{{newvalue}}</code></td>
+                </tr>{{/rows}}</tbody>
+            </table>
+        </div>
+        {{#canapply}}{{#islive}}<button type="submit" class="btn btn-warning">{{#str}}create_plan, local_siteconfigdiff{{/str}}</button>{{/islive}}{{/canapply}}
+    </form>
+    {{#canexport}}<p><a href="{{actionurl}}?export=comparisonjson&amp;id={{id}}">{{#str}}download_json, local_siteconfigdiff{{/str}}</a>
+        | <a href="{{actionurl}}?export=csv&amp;id={{id}}">{{#str}}download_csv, local_siteconfigdiff{{/str}}</a></p>{{/canexport}}
+</div>

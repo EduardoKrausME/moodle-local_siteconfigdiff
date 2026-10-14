@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "local_siteconfigdiff sanitized snapshot format 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "installation", "moodle", "generated_at", "plugins", "components", "integrity"],
+  "properties": {
+    "schema": {"const": 1},
+    "installation": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "moodle": {"type": "string", "maxLength": 60},
+    "generated_at": {"type": "integer"},
+    "integrity": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "plugins": {
+      "type": "object", "maxProperties": 2000, "propertyNames": {"pattern": "^[a-z][a-z0-9_]*$"},
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false, "required": ["version", "release"],
+        "properties": {"version": {"type": "string", "maxLength": 40}, "release": {"type": "string", "maxLength": 80}}
+      }
+    },
+    "components": {
+      "type": "object", "maxProperties": 2000, "propertyNames": {"pattern": "^[a-z][a-z0-9_]*$"},
+      "additionalProperties": {
+        "type": "object", "propertyNames": {"pattern": "^[a-z][a-z0-9_]*$"},
+        "additionalProperties": {"oneOf": [
+          {"type": "object", "additionalProperties": false, "required": ["kind", "present"], "properties": {"kind": {"const": "redacted"}, "present": {"const": true}}},
+          {"type": "object", "additionalProperties": false, "required": ["kind", "type", "value"], "properties": {
+            "kind": {"const": "value"}, "type": {"enum": ["null", "string", "boolean", "number"]},
+            "value": {"type": ["null", "string", "boolean", "number"], "maxLength": 4000}
+          }}
+        ]}
+      }
+    }
+  }
+}

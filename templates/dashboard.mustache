@@ -1,0 +1,72 @@
+<div class="local-siteconfigdiff container-fluid">
+    <p>{{#str}}description, local_siteconfigdiff{{/str}}</p>
+    <div class="row">
+        {{#canexport}}
+        <section class="col-md-6">
+            <h3>{{#str}}create_snapshot, local_siteconfigdiff{{/str}}</h3>
+            <form method="post" action="{{actionurl}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="snapshot">
+                <label for="scd-snapshot-name">{{#str}}snapshotname, local_siteconfigdiff{{/str}}</label>
+                <input id="scd-snapshot-name" class="form-control" name="name" type="text" maxlength="255" required>
+                <button type="submit" class="btn btn-primary mt-2">{{#str}}create_snapshot, local_siteconfigdiff{{/str}}</button>
+            </form>
+        </section>
+        {{/canexport}}
+        {{#canimport}}
+        <section class="col-md-6">
+            <h3>{{#str}}import_snapshot, local_siteconfigdiff{{/str}}</h3>
+            <form method="post" action="{{actionurl}}" enctype="multipart/form-data">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="import">
+                <label for="scd-import-name">{{#str}}snapshotname, local_siteconfigdiff{{/str}}</label>
+                <input id="scd-import-name" class="form-control" name="name" type="text" maxlength="255" required>
+                <label for="scd-import-file">{{#str}}jsonfile, local_siteconfigdiff{{/str}}</label>
+                <input id="scd-import-file" class="form-control" name="snapshot" type="file" accept=".json,application/json" required>
+                <button type="submit" class="btn btn-primary mt-2">{{#str}}import_snapshot, local_siteconfigdiff{{/str}}</button>
+            </form>
+        </section>
+        {{/canimport}}
+    </div>
+    <section class="mt-4">
+        <h3>{{#str}}snapshots, local_siteconfigdiff{{/str}}</h3>
+        <table class="generaltable table table-striped">
+            <thead><tr><th>ID</th><th>{{#str}}snapshotname, local_siteconfigdiff{{/str}}</th>
+                <th>{{#str}}installation, local_siteconfigdiff{{/str}}</th><th>{{#str}}created, local_siteconfigdiff{{/str}}</th><th>{{#str}}author, local_siteconfigdiff{{/str}}</th><th>{{#str}}actions, local_siteconfigdiff{{/str}}</th></tr></thead>
+            <tbody>{{#snapshots}}<tr><td>{{id}}</td><td>{{name}}</td><td><code>{{origin}}</code></td><td>{{created}}</td><td>{{author}}</td>
+                <td>{{#canexport}}<a href="{{actionurl}}?export=json&amp;id={{id}}">{{#str}}download_json, local_siteconfigdiff{{/str}}</a>{{/canexport}}</td></tr>{{/snapshots}}</tbody>
+        </table>
+        <h3>{{#str}}compare, local_siteconfigdiff{{/str}}</h3>
+        <form method="post" action="{{actionurl}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="action" value="compare">
+            <label for="scd-source">{{#str}}source, local_siteconfigdiff{{/str}}</label>
+            <select id="scd-source" class="custom-select" name="leftid" required>
+                {{#snapshots}}<option value="{{id}}">{{id}} - {{name}}</option>{{/snapshots}}
+            </select>
+            <label for="scd-target">{{#str}}destination, local_siteconfigdiff{{/str}}</label>
+            <select id="scd-target" class="custom-select" name="rightid">
+                <option value="0">{{#str}}currentsite, local_siteconfigdiff{{/str}}</option>
+                {{#snapshots}}<option value="{{id}}">{{id}} - {{name}}</option>{{/snapshots}}
+            </select>
+            <button type="submit" class="btn btn-primary mt-2">{{#str}}compare, local_siteconfigdiff{{/str}}</button>
+        </form>
+    </section>
+    <section class="mt-4">
+        <h3>{{#str}}comparisons, local_siteconfigdiff{{/str}}</h3>
+        <table class="generaltable table table-striped">
+            <thead><tr><th>ID</th><th>{{#str}}source, local_siteconfigdiff{{/str}}</th>
+                <th>{{#str}}destination, local_siteconfigdiff{{/str}}</th><th>{{#str}}created, local_siteconfigdiff{{/str}}</th><th>{{#str}}author, local_siteconfigdiff{{/str}}</th></tr></thead>
+            <tbody>{{#comparisons}}<tr><td><a href="{{actionurl}}?view=compare&amp;id={{id}}">{{id}}</a></td>
+                <td>{{leftid}}</td><td>{{rightid}}</td><td>{{created}}</td><td>{{author}}</td></tr>{{/comparisons}}</tbody>
+        </table>
+    </section>
+    <section class="mt-4">
+        <h3>{{#str}}plans, local_siteconfigdiff{{/str}}</h3>
+        <table class="generaltable table table-striped">
+            <thead><tr><th>ID</th><th>{{#str}}status, local_siteconfigdiff{{/str}}</th><th>{{#str}}created, local_siteconfigdiff{{/str}}</th><th>{{#str}}author, local_siteconfigdiff{{/str}}</th></tr></thead>
+            <tbody>{{#plans}}<tr><td><a href="{{actionurl}}?view=plan&amp;id={{id}}">{{id}}</a></td>
+                <td>{{status}}</td><td>{{created}}</td><td>{{author}}</td></tr>{{/plans}}</tbody>
+        </table>
+    </section>
+</div>
