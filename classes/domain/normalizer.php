@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/domain/normalizer.php for local_siteconfigdiff.
@@ -24,8 +24,14 @@
 
 namespace local_siteconfigdiff\domain;
 
-/** Deterministic comparison of documented JSON value types. */
+/**
+ * Deterministic comparison of documented JSON value types.
+ */
 final class normalizer {
+    /**
+     * Sort structured configuration values recursively.
+     * @param mixed $value Parameter.
+     */
     public static function sort_keys($value) {
         if (!is_array($value)) {
             return $value;
@@ -39,16 +45,31 @@ final class normalizer {
         return $value;
     }
 
+    /**
+     * Build a canonical representation.
+     * @param mixed $value Parameter.
+     * @return string Result.
+     */
     public static function canonical($value): string {
         $encoded = json_encode(self::sort_keys($value), JSON_UNESCAPED_SLASHES |
             JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION | JSON_THROW_ON_ERROR);
         return $encoded;
     }
 
+    /**
+     * Compare normalized configuration entries.
+     * @param mixed $a Parameter.
+     * @param mixed $b Parameter.
+     * @return bool Result.
+     */
     public static function equal($a, $b): bool {
         return self::canonical($a) === self::canonical($b);
     }
 
+    /**
+     * Render a sanitized setting value.
+     * @return string Result.
+     */
     public static function display(?array $entry): string {
         if ($entry === null) {
             return '[absent]';

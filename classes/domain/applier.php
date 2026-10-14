@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/domain/applier.php for local_siteconfigdiff.
@@ -24,9 +24,13 @@
 
 namespace local_siteconfigdiff\domain;
 
-/** Fail-closed selective application; never writes directly to configuration tables. */
+/**
+ * Fail-closed selective application; never writes directly to configuration tables.
+ */
 final class applier {
-    /** Require both explicit site admin allowlisting and a capability. */
+    /**
+     * Require both explicit site admin allowlisting and a capability.
+     */
     public static function require_authorized(): void {
         global $USER;
         require_capability('local/siteconfigdiff:apply', \context_system::instance());
@@ -38,6 +42,8 @@ final class applier {
     }
 
     /**
+ * Document the following operation.
+ *
      * @param array $plan Original previewed and server-side persisted plan.
      * @param callable $audit A callback recording each result durably.
      * @return array Summary with partial results; no claim of transaction rollback.

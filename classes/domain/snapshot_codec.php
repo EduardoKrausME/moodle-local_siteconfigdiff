@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/domain/snapshot_codec.php for local_siteconfigdiff.
@@ -24,12 +24,22 @@
 
 namespace local_siteconfigdiff\domain;
 
-/** Bounded schema validation and tamper-evident JSON transport (not authenticity). */
+/**
+ * Bounded schema validation and tamper-evident JSON transport (not authenticity).
+ */
 final class snapshot_codec {
+    /** MAX_BYTES safety limit. */
     public const MAX_BYTES = 1048576;
+    /** MAX_COMPONENTS safety limit. */
     private const MAX_COMPONENTS = 2000;
+    /** MAX_ENTRIES safety limit. */
     private const MAX_ENTRIES = 10000;
 
+    /**
+     * Seal a canonical snapshot.
+     * @param array $document Parameter.
+     * @return array Result.
+     */
     public static function seal(array $document): array {
         unset($document['integrity']);
         $document = normalizer::sort_keys($document);
@@ -37,11 +47,21 @@ final class snapshot_codec {
         return normalizer::sort_keys($document);
     }
 
+    /**
+     * Encode a snapshot as JSON.
+     * @param array $document Parameter.
+     * @return string Result.
+     */
     public static function encode(array $document): string {
         return json_encode(self::seal($document), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE |
             JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     }
 
+    /**
+     * Validate and decode a snapshot.
+     * @param string $input Parameter.
+     * @return array Result.
+     */
     public static function decode(string $input): array {
         if ($input === '' || strlen($input) > self::MAX_BYTES) {
             throw new \InvalidArgumentException('Invalid snapshot size.');
@@ -118,6 +138,10 @@ final class snapshot_codec {
         return $doc;
     }
 
+    /**
+     * Validate the component or setting name.
+     * @param mixed $name Parameter.
+     */
     private static function check_name($name): void {
         if (!is_string($name) || strlen($name) > 150 ||
             !preg_match('/^[a-z][a-z0-9_]*$/D', $name)) {

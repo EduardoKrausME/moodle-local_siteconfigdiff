@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/domain/policy.php for local_siteconfigdiff.
@@ -24,23 +24,48 @@
 
 namespace local_siteconfigdiff\domain;
 
-/** Conservative policy for observation and intentional writes. */
+/**
+ * Conservative policy for observation and intentional writes.
+ */
 final class policy {
-    /** Only reviewed core values can leave the originating site in clear text. */
+    /**
+     * Only reviewed core values can leave the originating site in clear text.
+     */
     private const READABLE = [
         'core' => ['lang', 'country', 'timezone', 'theme', 'calendar'],
     ];
-    /** Write allowlist is smaller than the observation allowlist. */
+    /**
+     * Write allowlist is smaller than the observation allowlist.
+     */
     private const WRITABLE = ['lang', 'country', 'timezone'];
 
+    /**
+     * Check whether a setting can leave the site in clear text.
+     * @param string $component Parameter.
+     * @param string $key Parameter.
+     * @return bool Result.
+     */
     public static function readable(string $component, string $key): bool {
         return in_array($key, self::READABLE[$component] ?? [], true);
     }
 
+    /**
+     * Check whether a setting may be applied.
+     * @param string $component Parameter.
+     * @param string $key Parameter.
+     * @return bool Result.
+     */
     public static function writable(string $component, string $key): bool {
         return $component === 'core' && in_array($key, self::WRITABLE, true);
     }
 
+    /**
+     * Validate a writable setting value.
+     * @param string $component Parameter.
+     * @param string $key Parameter.
+     * @param mixed $value Parameter.
+     * @return bool Result.
+     */
     public static function validate_value(string $component, string $key, $value): bool {
         if (!self::writable($component, $key) || !is_string($value)) {
             return false;
@@ -57,6 +82,12 @@ final class policy {
         return false;
     }
 
+    /**
+     * Classify the risk of a setting.
+     * @param string $component Parameter.
+     * @param string $key Parameter.
+     * @return string Result.
+     */
     public static function risk(string $component, string $key): string {
         if (!self::readable($component, $key)) {
             return 'unknown';
@@ -67,6 +98,12 @@ final class policy {
         return 'manual';
     }
 
+    /**
+     * Describe the impact of a configuration change.
+     * @param string $component Parameter.
+     * @param string $key Parameter.
+     * @return string Result.
+     */
     public static function impact(string $component, string $key): string {
         if (!self::readable($component, $key)) {
             return 'unreviewed';
@@ -81,6 +118,13 @@ final class policy {
         };
     }
 
+    /**
+     * Sanitize a setting before snapshot storage.
+     * @param string $component Parameter.
+     * @param string $key Parameter.
+     * @param mixed $value Parameter.
+     * @return array Result.
+     */
     public static function entry(string $component, string $key, $value): array {
         if (!self::readable($component, $key)) {
             return ['kind' => 'redacted', 'present' => true];

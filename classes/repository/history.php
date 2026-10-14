@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/repository/history.php for local_siteconfigdiff.
@@ -26,8 +26,16 @@ namespace local_siteconfigdiff\repository;
 
 use local_siteconfigdiff\domain\snapshot_codec;
 
-/** Database operations for the four persistence aggregates. */
+/**
+ * Database operations for the four persistence aggregates.
+ */
 final class history {
+    /**
+     * Persist a sanitized snapshot.
+     * @param string $name Parameter.
+     * @param array $doc Parameter.
+     * @return int Result.
+     */
     public function store_snapshot(string $name, array $doc): int {
         global $DB, $USER;
         $serialized = snapshot_codec::encode($doc);
@@ -39,12 +47,21 @@ final class history {
         ]);
     }
 
+    /**
+     * Return saved snapshots.
+     * @return array Result.
+     */
     public function snapshots(): array {
         global $DB;
         return array_values($DB->get_records('local_siteconfigdiff_snap', null, 'id DESC',
             'id,name,origin,integrityhash,userid,timecreated', 0, 100));
     }
 
+    /**
+     * Load a snapshot by identifier.
+     * @param int $id Parameter.
+     * @return array Result.
+     */
     public function snapshot(int $id): array {
         global $DB;
         $record = $DB->get_record('local_siteconfigdiff_snap', ['id' => $id], '*', MUST_EXIST);
@@ -55,6 +72,13 @@ final class history {
         return $doc;
     }
 
+    /**
+     * Persist a configuration comparison.
+     * @param int $left Parameter.
+     * @param int $right Parameter.
+     * @param array $doc Parameter.
+     * @return int Result.
+     */
     public function store_comparison(int $left, int $right, array $doc): int {
         global $DB, $USER;
         return $DB->insert_record('local_siteconfigdiff_diff', (object)[
@@ -64,18 +88,33 @@ final class history {
         ]);
     }
 
+    /**
+     * Return saved comparisons.
+     * @return array Result.
+     */
     public function comparisons(): array {
         global $DB;
         return array_values($DB->get_records('local_siteconfigdiff_diff', null, 'id DESC',
             'id,leftid,rightid,userid,timecreated', 0, 100));
     }
 
+    /**
+     * Load a comparison.
+     * @param int $id Parameter.
+     * @return array Result.
+     */
     public function comparison(int $id): array {
         global $DB;
         $record = $DB->get_record('local_siteconfigdiff_diff', ['id' => $id], '*', MUST_EXIST);
         return json_decode($record->document, true, 32, JSON_THROW_ON_ERROR);
     }
 
+    /**
+     * Persist an application plan.
+     * @param int $comparisonid Parameter.
+     * @param array $doc Parameter.
+     * @return int Result.
+     */
     public function store_plan(int $comparisonid, array $doc): int {
         global $DB, $USER;
         return $DB->insert_record('local_siteconfigdiff_plan', (object)[
@@ -86,17 +125,36 @@ final class history {
         ]);
     }
 
+    /**
+     * Return saved application plans.
+     * @return array Result.
+     */
     public function plans(): array {
         global $DB;
         return array_values($DB->get_records('local_siteconfigdiff_plan', null, 'id DESC',
             'id,comparisonid,status,userid,timecreated,timeapplied', 0, 100));
     }
 
+    /**
+     * Load a saved application plan.
+     * @param int $id Parameter.
+     * @return \stdClass Result.
+     */
     public function plan(int $id): \stdClass {
         global $DB;
         return $DB->get_record('local_siteconfigdiff_plan', ['id' => $id], '*', MUST_EXIST);
     }
 
+    /**
+     * Record an audit entry.
+     * @param int $planid Parameter.
+     * @param string $component Parameter.
+     * @param string $setting Parameter.
+     * @param string $outcome Parameter.
+     * @param string $reason Parameter.
+     * @param array $before Parameter.
+     * @param array $after Parameter.
+     */
     public function log(int $planid, string $component, string $setting, string $outcome,
             string $reason, array $before, array $after): void {
         global $DB, $USER;
@@ -110,6 +168,11 @@ final class history {
         ]);
     }
 
+    /**
+     * Return audit entries for a plan.
+     * @param int $planid Parameter.
+     * @return array Result.
+     */
     public function logs(int $planid): array {
         global $DB;
         return array_values($DB->get_records('local_siteconfigdiff_log', ['planid' => $planid], 'id ASC'));
