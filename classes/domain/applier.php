@@ -42,8 +42,8 @@ final class applier {
     }
 
     /**
- * Document the following operation.
- *
+     * Apply a reviewed configuration plan with per-setting audit records.
+     *
      * @param array $plan Original previewed and server-side persisted plan.
      * @param callable $audit A callback recording each result durably.
      * @return array Summary with partial results; no claim of transaction rollback.

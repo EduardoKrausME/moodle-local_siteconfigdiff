@@ -431,8 +431,9 @@ final class dashboard {
      */
     private function emit(string $action, int $objectid): void {
         \local_siteconfigdiff\event\activity_logged::create([
-            'context' => $this->context, 'objectid' => $objectid,
-            'other' => ['action' => $action],
+            'context' => $this->context,
+            // The event spans different tables; keep its record ID in other, not objectid.
+            'other' => ['action' => $action, 'recordid' => $objectid],
         ])->trigger();
     }
 }

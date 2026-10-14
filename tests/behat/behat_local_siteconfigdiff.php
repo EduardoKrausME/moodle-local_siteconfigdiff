@@ -27,8 +27,8 @@
  */
 class behat_local_siteconfigdiff extends behat_base {
     /**
- * Document the following operation.
- *
+     * Prepare an explicitly authorized configuration preview.
+     *
      * @Given /^I open an explicitly authorized configuration preview fixture$/
      */
     public function i_open_an_explicitly_authorized_configuration_preview_fixture(): void {
@@ -46,6 +46,7 @@ class behat_local_siteconfigdiff extends behat_base {
         $compareid = $repo->store_comparison($id, 0, $diff);
         $this->getSession()->visit($CFG->wwwroot . '/local/siteconfigdiff/index.php?view=compare&id=' . $compareid);
     }
+
     /**
      * Navigate directly to the configuration differences dashboard.
      *

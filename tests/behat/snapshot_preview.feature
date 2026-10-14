@@ -18,7 +18,7 @@ Feature: Preview configuration differences before any application
     Given I log in as "admin"
     And I open an explicitly authorized configuration preview fixture
     Then I should see "Site language"
-    When I check "core:lang"
+    When I click on "core:lang" "checkbox"
     And I press "Create application preview"
     Then I should see "Application plan"
     And I should see "pt_br"
