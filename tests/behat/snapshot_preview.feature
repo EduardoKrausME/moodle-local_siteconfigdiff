@@ -5,7 +5,7 @@ Feature: Preview configuration differences before any application
 
   Scenario: An administrator creates a snapshot and views a read-only comparison
     Given I log in as "admin"
-    And I am on "/local/siteconfigdiff/index.php"
+    And I open the site configuration differences dashboard
     When I set the following fields to these values:
       | Snapshot name | Behat source |
     And I press "Capture current site snapshot"

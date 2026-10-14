@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * tests/behat/behat_local_siteconfigdiff.php for local_siteconfigdiff.
@@ -22,9 +22,13 @@
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/** Prepare an allowed configuration change without any production dependency. */
+/**
+ * Prepare an allowed configuration change without any production dependency.
+ */
 class behat_local_siteconfigdiff extends behat_base {
     /**
+ * Document the following operation.
+ *
      * @Given /^I open an explicitly authorized configuration preview fixture$/
      */
     public function i_open_an_explicitly_authorized_configuration_preview_fixture(): void {
@@ -41,5 +45,14 @@ class behat_local_siteconfigdiff extends behat_base {
         $diff = (new \local_siteconfigdiff\domain\comparator())->compare($source, $target, true);
         $compareid = $repo->store_comparison($id, 0, $diff);
         $this->getSession()->visit($CFG->wwwroot . '/local/siteconfigdiff/index.php?view=compare&id=' . $compareid);
+    }
+    /**
+     * Navigate directly to the configuration differences dashboard.
+     *
+     * @Given /^I open the site configuration differences dashboard$/
+     */
+    public function i_open_the_site_configuration_differences_dashboard(): void {
+        global $CFG;
+        $this->getSession()->visit($CFG->wwwroot . '/local/siteconfigdiff/index.php');
     }
 }

@@ -1,5 +1,5 @@
 <div class="local-siteconfigdiff container-fluid">
-    <p><a href="{{actionurl}}">{{#str}}back, local_siteconfigdiff{{/str}}</a></p>
+    <p><a href="{{{actionurl}}}">{{#str}}back, local_siteconfigdiff{{/str}}</a></p>
     <h2>{{#str}}plan, local_siteconfigdiff{{/str}} #{{id}}</h2>
     <p>{{#str}}status, local_siteconfigdiff{{/str}}: {{status}} | {{kind}}</p>
     <p>{{#str}}planwarning, local_siteconfigdiff{{/str}}</p>
@@ -8,13 +8,13 @@
             <th>{{#str}}oldvalue, local_siteconfigdiff{{/str}}</th><th>{{#str}}newvalue, local_siteconfigdiff{{/str}}</th><th>{{#str}}risk, local_siteconfigdiff{{/str}}</th></tr></thead>
         <tbody>{{#entries}}<tr><td>{{component}}</td><td>{{name}}</td><td><code>{{oldvalue}}</code></td><td><code>{{newvalue}}</code></td><td>{{risk}}</td></tr>{{/entries}}</tbody>
     </table>
-    {{#canapply}}<a href="{{actionurl}}?export=planjson&amp;id={{id}}">{{#str}}download_plan, local_siteconfigdiff{{/str}}</a>{{/canapply}}
-    {{#pending}}<form method="post" action="{{actionurl}}">
+    {{#canapply}}<a href="{{{actionurl}}}?export=planjson&amp;id={{id}}">{{#str}}download_plan, local_siteconfigdiff{{/str}}</a>{{/canapply}}
+    {{#pending}}<form method="post" action="{{{actionurl}}}">
         <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="apply">
         <input type="hidden" name="planid" value="{{id}}">
         <button type="submit" class="btn btn-danger">{{#str}}apply_plan, local_siteconfigdiff{{/str}}</button>
     </form>{{/pending}}
-    {{#completed}}<form method="post" action="{{actionurl}}">
+    {{#completed}}<form method="post" action="{{{actionurl}}}">
         <input type="hidden" name="sesskey" value="{{sesskey}}"><input type="hidden" name="action" value="reverse">
         <input type="hidden" name="planid" value="{{id}}">
         <button type="submit" class="btn btn-secondary">{{#str}}prepare_reversal, local_siteconfigdiff{{/str}}</button>

@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/domain/planner.php for local_siteconfigdiff.
@@ -24,8 +24,16 @@
 
 namespace local_siteconfigdiff\domain;
 
-/** Generates immutable, optimistic-concurrency-aware preview plans. */
+/**
+ * Generates immutable, optimistic-concurrency-aware preview plans.
+ */
 final class planner {
+    /**
+     * Build a selective plan from reviewed differences.
+     * @param array $comparison Argument.
+     * @param array $rowids Argument.
+     * @return array Result.
+     */
     public function create(array $comparison, array $rowids): array {
         if (($comparison['target'] ?? '') !== 'current') {
             throw new \InvalidArgumentException('Only comparisons against the current site can be applied.');
@@ -52,10 +60,16 @@ final class planner {
             throw new \InvalidArgumentException('Select between 1 and 100 eligible settings.');
         }
         ksort($selected, SORT_STRING);
-        return ['schema' => 1, 'kind' => 'apply', 'installation' => $comparison['target_installation'], 'entries' => array_values($selected)];
+        return [
+            'schema' => 1, 'kind' => 'apply',
+            'installation' => $comparison['target_installation'],
+            'entries' => array_values($selected),
+        ];
     }
 
-    /** Generates a new preview plan only; external side effects are not rolled back. */
+    /**
+     * Generates a new preview plan only; external side effects are not rolled back.
+     */
     public function reverse(array $appliedentries, string $installation): array {
         $entries = [];
         foreach ($appliedentries as $entry) {

@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/domain/comparator.php for local_siteconfigdiff.
@@ -24,8 +24,17 @@
 
 namespace local_siteconfigdiff\domain;
 
-/** Compares source to destination without materializing sensitive values. */
+/**
+ * Compares source to destination without materializing sensitive values.
+ */
 final class comparator {
+    /**
+     * Compare sanitized configuration snapshots.
+     * @param array $source Argument.
+     * @param array $target Argument.
+     * @param bool $islive Argument.
+     * @return array Result.
+     */
     public function compare(array $source, array $target, bool $islive): array {
         $components = array_unique(array_merge(array_keys($source['components']), array_keys($target['components'])));
         sort($components, SORT_STRING);
@@ -67,7 +76,8 @@ final class comparator {
                     'source' => $after, 'target' => $before,
                     'applicable' => $applicable, 'pluginmissing' => $pluginmissing,
                     'source_version' => $source['plugins'][$component]['version'] ?? $source['moodle'],
-                    'target_version' => $target['plugins'][$component]['version'] ?? ($component === 'core' ? $target['moodle'] : ''),
+                    'target_version' => $target['plugins'][$component]['version'] ??
+                        ($component === 'core' ? $target['moodle'] : ''),
                 ];
             }
         }

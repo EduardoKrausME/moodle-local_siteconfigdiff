@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * tests/engine_test.php for local_siteconfigdiff.
@@ -31,8 +31,20 @@ use local_siteconfigdiff\domain\planner;
 use local_siteconfigdiff\domain\policy;
 use local_siteconfigdiff\domain\snapshot_codec;
 
-/** Regression cases for canonicalization, import policy and optimistic concurrency. */
+/**
+ * Regression cases for canonicalization, import policy and optimistic concurrency.
+ *
+ * @covers \local_siteconfigdiff\domain\applier
+ * @covers \local_siteconfigdiff\domain\comparator
+ * @covers \local_siteconfigdiff\domain\normalizer
+ * @covers \local_siteconfigdiff\domain\planner
+ * @covers \local_siteconfigdiff\domain\policy
+ * @covers \local_siteconfigdiff\domain\snapshot_codec
+ */
 final class engine_test extends \advanced_testcase {
+    /**
+     * Handle test normalization preserves absent null and empty.
+     */
     public function test_normalization_preserves_absent_null_and_empty(): void {
         $this->assertTrue(normalizer::equal(['a' => 1, 'b' => 2], ['b' => 2, 'a' => 1]));
         $this->assertFalse(normalizer::equal(null, ''));
@@ -43,6 +55,11 @@ final class engine_test extends \advanced_testcase {
         $this->assertSame('[empty string]', normalizer::display(['kind' => 'value', 'type' => 'string', 'value' => '']));
     }
 
+    /**
+     * Create an isolated snapshot for assertions.
+     * @param string $language Argument.
+     * @return array Result.
+     */
     private function fixture(string $language = 'en'): array {
         return snapshot_codec::seal([
             'schema' => 1,
@@ -58,6 +75,9 @@ final class engine_test extends \advanced_testcase {
         ]);
     }
 
+    /**
+     * Handle test snapshot does not export credentials and detects tampering.
+     */
     public function test_snapshot_does_not_export_credentials_and_detects_tampering(): void {
         $encoded = snapshot_codec::encode($this->fixture());
         $this->assertStringNotContainsString('TOPSECRET', $encoded);
@@ -66,6 +86,9 @@ final class engine_test extends \advanced_testcase {
         snapshot_codec::decode(str_replace('"value": "en"', '"value": "pt_br"', $encoded));
     }
 
+    /**
+     * Handle test import rejects unreviewed plaintext.
+     */
     public function test_import_rejects_unreviewed_plaintext(): void {
         $doc = $this->fixture();
         $doc['components']['core']['smtpsecret'] = ['kind' => 'value', 'type' => 'string', 'value' => 'LEAK'];
@@ -73,6 +96,9 @@ final class engine_test extends \advanced_testcase {
         snapshot_codec::decode(snapshot_codec::encode($doc));
     }
 
+    /**
+     * Handle test differences and redacted unknowns.
+     */
     public function test_differences_and_redacted_unknowns(): void {
         $from = $this->fixture('pt_br');
         $to = $this->fixture('en');
@@ -84,6 +110,9 @@ final class engine_test extends \advanced_testcase {
         $this->assertFalse($diff['rows'][1]['applicable']);
     }
 
+    /**
+     * Handle test application plan blocks unreviewed values.
+     */
     public function test_application_plan_blocks_unreviewed_values(): void {
         $diff = (new comparator())->compare($this->fixture('pt_br'), $this->fixture('en'), true);
         $plan = (new planner())->create($diff, [0]);
@@ -93,6 +122,9 @@ final class engine_test extends \advanced_testcase {
         (new planner())->create($diff, [1]);
     }
 
+    /**
+     * Handle test manifest detects missing plugin without setting differences.
+     */
     public function test_manifest_detects_missing_plugin_without_setting_differences(): void {
         $source = $this->fixture();
         $target = $this->fixture();
@@ -105,6 +137,9 @@ final class engine_test extends \advanced_testcase {
         }
     }
 
+    /**
+     * Handle test rejects extra document properties and oversized inputs.
+     */
     public function test_rejects_extra_document_properties_and_oversized_inputs(): void {
         $document = $this->fixture();
         $document['unreviewed'] = 'unexpected';
@@ -118,6 +153,9 @@ final class engine_test extends \advanced_testcase {
         snapshot_codec::decode(str_repeat('a', snapshot_codec::MAX_BYTES + 1));
     }
 
+    /**
+     * Handle test apply checks stale destination.
+     */
     public function test_apply_checks_stale_destination(): void {
         global $USER, $CFG;
         $this->resetAfterTest();
@@ -140,7 +178,9 @@ final class engine_test extends \advanced_testcase {
         $this->assertSame('en', get_config(null, 'lang'));
         $this->assertSame('stale', $audits[0][2]);
         $plan['entries'][0]['expected'] = policy::entry('core', 'lang', 'en');
-        $summary = (new applier())->apply($plan, function() {});
+        $summary = (new applier())->apply($plan, function(): void {
+            // An audit callback is required, but not inspected by this assertion.
+        });
         $this->assertSame(1, $summary['applied']);
         $this->assertSame('fr', get_config(null, 'lang'));
     }

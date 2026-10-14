@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/domain/collector.php for local_siteconfigdiff.
@@ -24,12 +24,18 @@
 
 namespace local_siteconfigdiff\domain;
 
-/** Reads Moodle config exclusively through the supported configuration API. */
+/**
+ * Reads Moodle config exclusively through the supported configuration API.
+ */
 final class collector {
+    /**
+     * Collect sanitized core and plugin configuration values.
+     * @return array Result.
+     */
     public function collect(): array {
         global $CFG;
         $components = ['core' => []];
-        $global = get_config();
+        $global = get_config('core');
         foreach ($global as $key => $value) {
             if (preg_match('/^[a-z][a-z0-9_]*$/D', $key)) {
                 $components['core'][$key] = policy::entry('core', $key, $value);

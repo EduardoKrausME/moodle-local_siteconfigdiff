@@ -1,5 +1,5 @@
 <div class="local-siteconfigdiff container-fluid">
-    <p><a href="{{actionurl}}">{{#str}}back, local_siteconfigdiff{{/str}}</a></p>
+    <p><a href="{{{actionurl}}}">{{#str}}back, local_siteconfigdiff{{/str}}</a></p>
     <h2>{{#str}}comparison, local_siteconfigdiff{{/str}} #{{id}}</h2>
     <p>{{#str}}source, local_siteconfigdiff{{/str}}: {{source_moodle}}
         | {{#str}}destination, local_siteconfigdiff{{/str}}: {{target_moodle}}</p>
@@ -12,7 +12,7 @@
         <tbody>{{#pluginchanges}}<tr><td>{{component}}</td><td>{{status}}</td><td>{{source_version}}</td><td>{{target_version}}</td></tr>{{/pluginchanges}}</tbody>
     </table>
     {{/haspluginchanges}}
-    <form method="get" action="{{actionurl}}" class="form-inline mb-3">
+    <form method="get" action="{{{actionurl}}}" class="form-inline mb-3">
         <input type="hidden" name="view" value="compare"><input type="hidden" name="id" value="{{id}}">
         <label for="scd-search">{{#str}}search, local_siteconfigdiff{{/str}}</label>
         <input id="scd-search" class="form-control mr-2" name="q" type="search" value="{{q}}">
@@ -38,7 +38,7 @@
         </select>
         <button type="submit" class="btn btn-secondary">{{#str}}filter, local_siteconfigdiff{{/str}}</button>
     </form>
-    <form method="post" action="{{actionurl}}">
+    <form method="post" action="{{{actionurl}}}">
         <input type="hidden" name="sesskey" value="{{sesskey}}">
         <input type="hidden" name="action" value="plan">
         <input type="hidden" name="comparisonid" value="{{id}}">
@@ -60,6 +60,6 @@
         </div>
         {{#canapply}}{{#islive}}<button type="submit" class="btn btn-warning">{{#str}}create_plan, local_siteconfigdiff{{/str}}</button>{{/islive}}{{/canapply}}
     </form>
-    {{#canexport}}<p><a href="{{actionurl}}?export=comparisonjson&amp;id={{id}}">{{#str}}download_json, local_siteconfigdiff{{/str}}</a>
-        | <a href="{{actionurl}}?export=csv&amp;id={{id}}">{{#str}}download_csv, local_siteconfigdiff{{/str}}</a></p>{{/canexport}}
+    {{#canexport}}<p><a href="{{{actionurl}}}?export=comparisonjson&amp;id={{id}}">{{#str}}download_json, local_siteconfigdiff{{/str}}</a>
+        | <a href="{{{actionurl}}}?export=csv&amp;id={{id}}">{{#str}}download_csv, local_siteconfigdiff{{/str}}</a></p>{{/canexport}}
 </div>

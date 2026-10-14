@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * classes/controller/dashboard.php for local_siteconfigdiff.
@@ -32,11 +32,18 @@ use local_siteconfigdiff\domain\planner;
 use local_siteconfigdiff\domain\snapshot_codec;
 use local_siteconfigdiff\repository\history;
 
-/** MVC controller: PHP handles transitions, Mustache only displays plain arrays. */
+/**
+ * MVC controller: PHP handles transitions, Mustache only displays plain arrays.
+ */
 final class dashboard {
+    /** @var history repo property. */
     private history $repo;
+    /** @var \context_system context property. */
     private \context_system $context;
 
+    /**
+     * Render the restricted configuration dashboard.
+     */
     public function run(): void {
         global $PAGE, $OUTPUT;
         require_login();
@@ -78,7 +85,11 @@ final class dashboard {
         echo $OUTPUT->footer();
     }
 
-    /** @return array<string, int|string> */
+    /**
+     * Document the following operation.
+     *
+     * @return array<string, int|string>
+     */
     private function dispatch(string $action): array {
         global $DB;
         switch ($action) {
@@ -187,6 +198,10 @@ final class dashboard {
         }
     }
 
+    /**
+     * Read a sanitized snapshot upload.
+     * @return string Result.
+     */
     private function read_upload(): string {
         if (!isset($_FILES['snapshot']) || !is_array($_FILES['snapshot'])) {
             throw new \InvalidArgumentException('Missing upload.');
@@ -207,6 +222,11 @@ final class dashboard {
         return $bytes;
     }
 
+    /**
+     * Export the requested sanitized document.
+     * @param string $format Argument.
+     * @param int $id Argument.
+     */
     private function download(string $format, int $id): void {
         global $USER;
         require_capability('local/siteconfigdiff:export', $this->context);
@@ -250,11 +270,16 @@ final class dashboard {
         header('Content-Type: ' . $mime . '; charset=utf-8');
         header('X-Content-Type-Options: nosniff');
         header('Cache-Control: no-store, private');
-        header('Content-Disposition: attachment; filename="siteconfigdiff-' . $id . '.' . ($format === 'csv' ? 'csv' : 'json') . '"');
+        header('Content-Disposition: attachment; filename="siteconfigdiff-' .
+            $id . '.' . ($format === 'csv' ? 'csv' : 'json') . '"');
         echo $body;
         exit;
     }
 
+    /**
+     * Build shared template values.
+     * @return array Result.
+     */
     private function base_context(): array {
         global $USER;
         $allow = array_filter(array_map('trim', explode(',', (string)get_config('local_siteconfigdiff', 'allowedappliers'))));
@@ -268,6 +293,10 @@ final class dashboard {
         ];
     }
 
+    /**
+     * Build the dashboard view model.
+     * @return array Result.
+     */
     private function dashboard_context(): array {
         $context = $this->base_context();
         $snapshots = $this->repo->snapshots();
@@ -286,6 +315,11 @@ final class dashboard {
         return $context;
     }
 
+    /**
+     * Build the comparison view model.
+     * @param int $id Argument.
+     * @return array Result.
+     */
     private function comparison_context(int $id): array {
         $ctx = $this->base_context();
         $doc = $this->repo->comparison($id);
@@ -358,6 +392,11 @@ final class dashboard {
         return $ctx;
     }
 
+    /**
+     * Build the plan and audit view model.
+     * @param int $id Argument.
+     * @return array Result.
+     */
     private function plan_context(int $id): array {
         $ctx = $this->base_context();
         $record = $this->repo->plan($id);
@@ -385,6 +424,11 @@ final class dashboard {
         return $ctx;
     }
 
+    /**
+     * Record an audit event.
+     * @param string $action Argument.
+     * @param int $objectid Argument.
+     */
     private function emit(string $action, int $objectid): void {
         \local_siteconfigdiff\event\activity_logged::create([
             'context' => $this->context, 'objectid' => $objectid,
