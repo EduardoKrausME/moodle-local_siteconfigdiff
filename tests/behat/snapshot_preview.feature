@@ -23,5 +23,5 @@ Feature: Preview configuration differences before any application
     Then I should see "Application plan"
     And I should see "pt_br"
     When I press "Apply the reviewed changes"
-    Then I should see "applied"
+    Then I should see "Applied"
     And I should see "Prepare reversal preview"
