@@ -97,7 +97,7 @@ final class dashboard {
                 require_capability('local/siteconfigdiff:export', $this->context);
                 $doc = (new collector())->collect();
                 $name = trim(required_param('name', PARAM_TEXT));
-                if ($name === '' || \core_text::strlen($name) > 255) {
+                if ($name === '' || strlen($name) > 255) {
                     throw new \InvalidArgumentException('Invalid snapshot name.');
                 }
                 $id = $this->repo->store_snapshot($name, $doc);
@@ -108,7 +108,7 @@ final class dashboard {
                 $bytes = $this->read_upload();
                 $doc = snapshot_codec::decode($bytes);
                 $name = trim(required_param('name', PARAM_TEXT));
-                if ($name === '' || \core_text::strlen($name) > 255) {
+                if ($name === '' || strlen($name) > 255) {
                     throw new \InvalidArgumentException('Invalid snapshot name.');
                 }
                 $id = $this->repo->store_snapshot($name, $doc);
