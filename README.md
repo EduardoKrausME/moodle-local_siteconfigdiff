@@ -6,9 +6,9 @@ A controlled, offline-first configuration snapshot and comparison plugin for Moo
 
 1. Use **Site administration → Plugins → Local plugins → Configuration comparisons**.
 2. Configure permissions for `view`, `export` and `import`. Automatic `apply` is **off by default**.
-4. An administrator with `export` can capture and download a sanitized JSON snapshot. Transport the file out-of-band to a second installation; **no remote admin endpoints** are required.
-5. An administrator with `import` imports the JSON file, which is bounded, parsed, structurally checked, and checksum-verified.
-6. Compare two imported snapshots, or a source snapshot against the **live** destination. Review redacted, missing, added, removed or modified values, plugin manifests, expected impact and risk.
+3. An administrator with `export` can capture and download a sanitized JSON snapshot. Transport the file out-of-band to a second installation; **no remote admin endpoints** are required.
+4. An administrator with `import` imports the JSON file, which is bounded, parsed, structurally checked, and checksum-verified.
+5. Compare two imported snapshots, or a source snapshot against the **live** destination. Review redacted, missing, added, removed or modified values, plugin manifests, expected impact and risk.
 7. To authorize automatic changes, explicitly grant the `local/siteconfigdiff:apply` capability and set the site administrator's numeric ID in `local_siteconfigdiff/allowedappliers` (comma-separated). A granted capability *alone* is not sufficient.
 8. In a comparison against the live destination, select only available checkboxes and create a persistent preview plan. A second POST approval applies only the plan's allowlisted entries, rejecting values that have changed since preview.
 9. Audit results are persisted. A reversal creates **a new preview plan** from successful modifications; nothing is rolled back automatically.
