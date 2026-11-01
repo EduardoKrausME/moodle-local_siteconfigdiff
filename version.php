@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release = '1.0.3';
-$plugin->version = 2026101500;
+$plugin->version = 2026103100;
+$plugin->release = '1.0.4';
 $plugin->requires = 2024100700;
 $plugin->component = 'local_siteconfigdiff';
 $plugin->maturity = MATURITY_STABLE;
