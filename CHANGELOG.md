@@ -2,6 +2,14 @@
 
 This changelog documents only the two most recent **published** releases of `local_siteconfigdiff`, verified on October 24, 2026. Each entry reflects the published Git tag compared with its immediately preceding published release tag. Commits made on October 20–21, 2026 (`Mustache`, `Boilerplate Headers`, and `-core_text`) occurred after release `1.0.3` and are intentionally excluded.
 
+## 1.0.4 - 2026-11-01
+
+- Normalized PHP and Mustache headers and replaced legacy `core_text` usage across configuration comparison and planning classes.
+- Updated release workflow configuration and historical documentation.
+- Removed installation walkthroughs from the README.
+
+**Full comparison:** [1.0.3...1.0.4](https://github.com/EduardoKrausME/moodle-local_siteconfigdiff/compare/1.0.3...1.0.4)
+
 ## [1.0.3] - 2026-10-15
 
 ### Added
